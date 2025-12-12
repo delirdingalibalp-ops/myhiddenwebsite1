@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Romance - Category Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --dark-bg: #1a1a2e;
+            --darker-bg: #16213e;
+            --accent-dark: #0f3460;
+            --romantic-red: #b3005e;
+            --romantic-pink: #e94584;
+            --light-text: #f1f1f6;
+            --muted-text: #b8b8cc;
+            --gold-accent: #d4af37;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Crimson Text', 'Playfair Display', serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--dark-bg), var(--darker-bg));
+            color: var(--light-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(179, 0, 94, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(233, 69, 132, 0.1) 0%, transparent 20%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(15, 52, 96, 0.9));
+            color: var(--light-text);
+            padding: 40px 0;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(179, 0, 94, 0.3);
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--romantic-red), transparent);
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--romantic-pink), transparent);
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            font-style: italic;
+            margin-top: 15px;
+            color: var(--muted-text);
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .categories-section, .category-items-section {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(26, 26, 46, 0.7);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(179, 0, 94, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .categories-section::before, .category-items-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--romantic-red), var(--romantic-pink));
+        }
+        
+        h2 {
+            color: var(--light-text);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(179, 0, 94, 0.3);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 i {
+            color: var(--romantic-pink);
+        }
+        
+        .category-form {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .category-input, .item-input {
+            flex: 1;
+            padding: 14px 15px;
+            background: rgba(22, 33, 62, 0.8);
+            border: 1px solid rgba(179, 0, 94, 0.4);
+            border-radius: 5px 0 0 5px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+            color: var(--light-text);
+        }
+        
+        .category-input:focus, .item-input:focus {
+            border-color: var(--romantic-pink);
+            box-shadow: 0 0 10px rgba(233, 69, 132, 0.3);
+        }
+        
+        .category-input::placeholder, .item-input::placeholder {
+            color: var(--muted-text);
+        }
+        
+        .add-btn {
+            background: linear-gradient(135deg, var(--romantic-red), var(--romantic-pink));
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .add-btn:hover {
+            background: linear-gradient(135deg, var(--romantic-pink), var(--romantic-red));
+            box-shadow: 0 0 15px rgba(233, 69, 132, 0.5);
+        }
+        
+        .categories-list {
+            list-style-type: none;
+        }
+        
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(22, 33, 62, 0.6);
+            border-radius: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+        
+        .category-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background: rgba(22, 33, 62, 0.8);
+            border-left: 3px solid var(--romantic-pink);
+        }
+        
+        .category-item.active {
+            background: rgba(15, 52, 96, 0.6);
+            border-left: 4px solid var(--romantic-red);
+            box-shadow: 0 5px 15px rgba(179, 0, 94, 0.2);
+        }
+        
+        .category-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--light-text);
+        }
+        
+        .category-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--muted-text);
+            transition: all 0.3s;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .action-btn:hover {
+            color: var(--romantic-pink);
+            background: rgba(179, 0, 94, 0.2);
+        }
+        
+        .items-container {
+            display: none;
+        }
+        
+        .items-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .item-form {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        
+        .items-list {
+            list-style-type: none;
+        }
+        
+        .list-item {
+            padding: 20px;
+            margin-bottom: 15px;
+            background: rgba(22, 33, 62, 0.6);
+            border-radius: 10px;
+            border-left: 4px solid var(--romantic-red);
+            position: relative;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .list-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .list-item p {
+            margin-bottom: 10px;
+            line-height: 1.7;
+        }
+        
+        .list-item .content-preview {
+            max-height: 60px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .list-item .content-preview::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(transparent, rgba(22, 33, 62, 0.8));
+        }
+        
+        .list-item.expanded .content-preview {
+            max-height: none;
+        }
+        
+        .list-item.expanded .content-preview::after {
+            display: none;
+        }
+        
+        .expand-btn {
+            background: none;
+            border: none;
+            color: var(--romantic-pink);
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+        
+        .expand-btn:hover {
+            color: var(--light-text);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--muted-text);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--romantic-red);
+            opacity: 0.7;
+        }
+        
+        .empty-state p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--muted-text);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(179, 0, 94, 0.2);
+        }
+        
+        #selected-category-name {
+            color: var(--romantic-pink);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Inline Editing Styles */
+        .edit-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--romantic-pink);
+            border-radius: 5px;
+            color: var(--light-text);
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            resize: vertical;
+            min-height: 40px;
+        }
+        
+        .edit-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: flex-end;
+        }
+        
+        .save-btn, .cancel-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .save-btn {
+            background: var(--romantic-red);
+            color: white;
+        }
+        
+        .save-btn:hover {
+            background: var(--romantic-pink);
+        }
+        
+        .cancel-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light-text);
+        }
+        
+        .cancel-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Modern Delete Confirmation Styles */
+        .delete-confirmation-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .delete-confirmation-modal {
+            background: linear-gradient(135deg, var(--dark-bg), var(--accent-dark));
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid var(--romantic-red);
+            position: relative;
+            animation: modalAppear 0.3s ease;
+        }
+        
+        @keyframes modalAppear {
+            from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .delete-confirmation-modal::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--romantic-red), var(--romantic-pink));
+        }
+        
+        .delete-icon {
+            font-size: 3rem;
+            color: var(--romantic-red);
+            margin-bottom: 15px;
+        }
+        
+        .delete-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--light-text);
+        }
+        
+        .delete-message {
+            color: var(--muted-text);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .delete-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .delete-confirm-btn, .delete-cancel-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+        
+        .delete-confirm-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+        
+        .delete-confirm-btn:hover {
+            background: linear-gradient(135deg, #c0392b, #a93226);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+        
+        .delete-cancel-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light-text);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .delete-cancel-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .categories-section, .category-items-section {
+                min-width: 100%;
+            }
+            
+            .delete-actions {
+                flex-direction: column;
+            }
+            
+            .delete-confirm-btn, .delete-cancel-btn {
+                width: 100%;
+            }
+        }
+        
+        /* Scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--darker-bg);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--romantic-red);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--romantic-pink);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-heart"></i> Dark Romance</h1>
+            <p class="subtitle">Where passions and darkness intertwine...</p>
+        </header>
+        
+        <div class="content">
+            <section class="categories-section">
+                <h2><i class="fas fa-tags"></i> Categories</h2>
+                <div class="category-form">
+                    <input type="text" class="category-input" placeholder="New category name...">
+                    <button class="add-btn">Add</button>
+                </div>
+                <ul class="categories-list">
+                    <!-- Categories will be added here -->
+                </ul>
+            </section>
+            
+            <section class="category-items-section">
+                <h2><i class="fas fa-pen-nib"></i> Category Content</h2>
+                <div class="empty-state" id="empty-state">
+                    <i class="fas fa-heart-crack"></i>
+                    <p>Select a category or add a new one</p>
+                </div>
+                
+                <div class="items-container" id="items-container">
+                    <h3 id="selected-category-name"><i class="fas fa-star"></i> Category Name</h3>
+                    <div class="item-form">
+                        <input type="text" class="item-input" placeholder="New content related to the category...">
+                        <button class="add-btn">Add</button>
+                    </div>
+                    <ul class="items-list">
+                        <!-- Category content will be added here -->
+                    </ul>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            <p>Dark Romance Category Management System &copy; 2023</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sample categories
+            const sampleCategories = [
+                { id: 1, name: 'Love and Passion', items: [
+                    'Love is like a star shining in the darkness; it may seem to disappear at times, but it is always there.',
+                    'Passion is a storm that comes from the depths of the heart; like a hidden whirlpool beneath calm waters.',
+                    'Sometimes the darkest nights give birth to the brightest stars. Is love not the same?'
+                ]},
+                { id: 2, name: 'Dark Fantasies', items: [
+                    'The darkness of the night is like a cloak that covers our hidden desires.',
+                    'Sometimes the most dangerous things are what we desire the most.',
+                    'Getting lost in the darkness is sometimes the best way to find yourself.'
+                ]},
+                { id: 3, name: 'Forbidden Loves', items: [
+                    'Forbidden love is like a poisonous flower; its beauty attracts you but touching it is dangerous.',
+                    'Sometimes the most dangerous waters nourish the deepest passions.',
+                    'Forbidden things are like a charm that makes love even more attractive.'
+                ]}
+            ];
+            
+            let categories = JSON.parse(localStorage.getItem('categories')) || sampleCategories;
+            let selectedCategoryId = null;
+            let pendingDelete = null;
+            
+            const categoriesList = document.querySelector('.categories-list');
+            const categoryInput = document.querySelector('.category-input');
+            const addCategoryBtn = document.querySelector('.categories-section .add-btn');
+            const itemsContainer = document.getElementById('items-container');
+            const emptyState = document.getElementById('empty-state');
+            const selectedCategoryName = document.getElementById('selected-category-name');
+            const itemInput = document.querySelector('.item-input');
+            const addItemBtn = document.querySelector('.category-items-section .add-btn');
+            const itemsList = document.querySelector('.items-list');
+            
+            // Load categories
+            function loadCategories() {
+                categoriesList.innerHTML = '';
+                
+                categories.forEach(category => {
+                    const li = document.createElement('li');
+                    li.className = 'category-item';
+                    if (category.id === selectedCategoryId) {
+                        li.classList.add('active');
+                    }
+                    
+                    li.innerHTML = `
+                        <span class="category-name">${category.name}</span>
+                        <div class="category-actions">
+                            <button class="action-btn edit-category" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn delete-category" title="Delete"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    
+                    li.addEventListener('click', (e) => {
+                        if (!e.target.classList.contains('action-btn') && !e.target.classList.contains('fa-edit') && !e.target.classList.contains('fa-trash')) {
+                            selectCategory(category.id);
+                        }
+                    });
+                    
+                    const editBtn = li.querySelector('.edit-category');
+                    editBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        editCategoryInline(category.id, li);
+                    });
+                    
+                    const deleteBtn = li.querySelector('.delete-category');
+                    deleteBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        showDeleteConfirmation('category', category.id, category.name);
+                    });
+                    
+                    categoriesList.appendChild(li);
+                });
+                
+                saveToLocalStorage();
+            }
+            
+            // Select category
+            function selectCategory(categoryId) {
+                selectedCategoryId = categoryId;
+                loadCategories();
+                
+                const category = categories.find(c => c.id === categoryId);
+                if (category) {
+                    emptyState.style.display = 'none';
+                    itemsContainer.classList.add('active');
+                    selectedCategoryName.innerHTML = `<i class="fas fa-star"></i> ${category.name}`;
+                    loadCategoryItems(category);
+                }
+            }
+            
+            // Load category items
+            function loadCategoryItems(category) {
+                itemsList.innerHTML = '';
+                
+                if (category.items.length === 0) {
+                    itemsList.innerHTML = '<div class="empty-state"><i class="fas fa-heart-crack"></i><p>No content has been added to this category yet</p></div>';
+                    return;
+                }
+                
+                category.items.forEach((item, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'list-item';
+                    
+                    // Create preview (first 150 characters)
+                    const previewText = item.length > 150 ? item.substring(0, 150) + '...' : item;
+                    
+                    li.innerHTML = `
+                        <div class="content-preview">
+                            <p>${previewText}</p>
+                        </div>
+                        ${item.length > 150 ? '<button class="expand-btn"><i class="fas fa-chevron-down"></i> Show more</button>' : ''}
+                        <div class="category-actions" style="margin-top: 10px;">
+                            <button class="action-btn edit-item" data-index="${index}" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn delete-item" data-index="${index}" title="Delete"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    
+                    // Add click event to expand/collapse content
+                    if (item.length > 150) {
+                        const expandBtn = li.querySelector('.expand-btn');
+                        expandBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            li.classList.toggle('expanded');
+                            if (li.classList.contains('expanded')) {
+                                li.querySelector('.content-preview').innerHTML = `<p>${item}</p>`;
+                                expandBtn.innerHTML = '<i class="fas fa-chevron-up"></i> Show less';
+                            } else {
+                                li.querySelector('.content-preview').innerHTML = `<p>${previewText}</p>`;
+                                expandBtn.innerHTML = '<i class="fas fa-chevron-down"></i> Show more';
+                            }
+                        });
+                    }
+                    
+                    const editBtn = li.querySelector('.edit-item');
+                    editBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const index = parseInt(e.target.closest('button').getAttribute('data-index'));
+                        editItemInline(category.id, index, li);
+                    });
+                    
+                    const deleteBtn = li.querySelector('.delete-item');
+                    deleteBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const index = parseInt(e.target.closest('button').getAttribute('data-index'));
+                        showDeleteConfirmation('item', category.id, null, index);
+                    });
+                    
+                    itemsList.appendChild(li);
+                });
+            }
+            
+            // Add new category
+            function addCategory() {
+                const name = categoryInput.value.trim();
+                if (name === '') return;
+                
+                const newCategory = {
+                    id: Date.now(),
+                    name: name,
+                    items: []
+                };
+                
+                categories.push(newCategory);
+                categoryInput.value = '';
+                loadCategories();
+                selectCategory(newCategory.id);
+            }
+            
+            // Edit category inline
+            function editCategoryInline(categoryId, listItem) {
+                const category = categories.find(c => c.id === categoryId);
+                if (!category) return;
+                
+                const categoryNameElement = listItem.querySelector('.category-name');
+                const originalName = category.name;
+                
+                const editInput = document.createElement('input');
+                editInput.type = 'text';
+                editInput.className = 'edit-input';
+                editInput.value = originalName;
+                
+                const editActions = document.createElement('div');
+                editActions.className = 'edit-actions';
+                
+                const saveBtn = document.createElement('button');
+                saveBtn.className = 'save-btn';
+                saveBtn.innerHTML = '<i class="fas fa-check"></i> Save';
+                
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'cancel-btn';
+                cancelBtn.innerHTML = '<i class="fas fa-times"></i> Cancel';
+                
+                editActions.appendChild(saveBtn);
+                editActions.appendChild(cancelBtn);
+                
+                // Replace category name with input field
+                listItem.querySelector('.category-actions').style.display = 'none';
+                categoryNameElement.replaceWith(editInput);
+                listItem.appendChild(editActions);
+                
+                // Focus and select text in input
+                editInput.focus();
+                editInput.select();
+                
+                // Save on Enter key
+                editInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        saveCategoryEdit(categoryId, editInput.value.trim(), listItem);
+                    }
+                });
+                
+                // Save button click
+                saveBtn.addEventListener('click', () => {
+                    saveCategoryEdit(categoryId, editInput.value.trim(), listItem);
+                });
+                
+                // Cancel button click
+                cancelBtn.addEventListener('click', () => {
+                    cancelCategoryEdit(listItem, originalName);
+                });
+            }
+            
+            // Save category edit
+            function saveCategoryEdit(categoryId, newName, listItem) {
+                if (newName === '') return;
+                
+                const category = categories.find(c => c.id === categoryId);
+                if (category) {
+                    category.name = newName;
+                    loadCategories();
+                    
+                    if (selectedCategoryId === categoryId) {
+                        selectedCategoryName.innerHTML = `<i class="fas fa-star"></i> ${category.name}`;
+                    }
+                    
+                    saveToLocalStorage();
+                }
+            }
+            
+            // Cancel category edit
+            function cancelCategoryEdit(listItem, originalName) {
+                loadCategories();
+            }
+            
+            // Edit item inline
+            function editItemInline(categoryId, itemIndex, listItem) {
+                const category = categories.find(c => c.id === categoryId);
+                if (!category || !category.items[itemIndex]) return;
+                
+                const originalContent = category.items[itemIndex];
+                const contentPreview = listItem.querySelector('.content-preview');
+                const expandBtn = listItem.querySelector('.expand-btn');
+                const actionsContainer = listItem.querySelector('.category-actions');
+                
+                // Create edit textarea
+                const editTextarea = document.createElement('textarea');
+                editTextarea.className = 'edit-input';
+                editTextarea.value = originalContent;
+                editTextarea.rows = 4;
+                
+                const editActions = document.createElement('div');
+                editActions.className = 'edit-actions';
+                
+                const saveBtn = document.createElement('button');
+                saveBtn.className = 'save-btn';
+                saveBtn.innerHTML = '<i class="fas fa-check"></i> Save';
+                
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'cancel-btn';
+                cancelBtn.innerHTML = '<i class="fas fa-times"></i> Cancel';
+                
+                editActions.appendChild(saveBtn);
+                editActions.appendChild(cancelBtn);
+                
+                // Replace content with textarea
+                if (expandBtn) expandBtn.style.display = 'none';
+                actionsContainer.style.display = 'none';
+                contentPreview.replaceWith(editTextarea);
+                listItem.appendChild(editActions);
+                
+                // Focus and select text in textarea
+                editTextarea.focus();
+                editTextarea.select();
+                
+                // Save on Ctrl+Enter
+                editTextarea.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey && e.key === 'Enter') {
+                        saveItemEdit(categoryId, itemIndex, editTextarea.value.trim(), listItem);
+                    }
+                });
+                
+                // Save button click
+                saveBtn.addEventListener('click', () => {
+                    saveItemEdit(categoryId, itemIndex, editTextarea.value.trim(), listItem);
+                });
+                
+                // Cancel button click
+                cancelBtn.addEventListener('click', () => {
+                    cancelItemEdit(listItem, categoryId);
+                });
+            }
+            
+            // Save item edit
+            function saveItemEdit(categoryId, itemIndex, newContent, listItem) {
+                if (newContent === '') return;
+                
+                const category = categories.find(c => c.id === categoryId);
+                if (category) {
+                    category.items[itemIndex] = newContent;
+                    loadCategoryItems(category);
+                    saveToLocalStorage();
+                }
+            }
+            
+            // Cancel item edit
+            function cancelItemEdit(listItem, categoryId) {
+                const category = categories.find(c => c.id === categoryId);
+                if (category) {
+                    loadCategoryItems(category);
+                    saveToLocalStorage();
+                }
+            }
+            
+            // Show delete confirmation modal
+            function showDeleteConfirmation(type, categoryId, categoryName, itemIndex = null) {
+                pendingDelete = { type, categoryId, categoryName, itemIndex };
+                
+                const overlay = document.createElement('div');
+                overlay.className = 'delete-confirmation-overlay';
+                
+                let title, message;
+                
+                if (type === 'category') {
+                    title = 'Delete Category';
+                    message = `Are you sure you want to delete the category "${categoryName}"? This will also delete all its content. This action cannot be undone.`;
+                } else {
+                    const category = categories.find(c => c.id === categoryId);
+                    const itemContent = category.items[itemIndex];
+                    const preview = itemContent.length > 100 ? itemContent.substring(0, 100) + '...' : itemContent;
+                    title = 'Delete Content';
+                    message = `Are you sure you want to delete this content?<br><br>"${preview}"<br><br>This action cannot be undone.`;
+                }
+                
+                overlay.innerHTML = `
+                    <div class="delete-confirmation-modal">
+                        <div class="delete-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h3 class="delete-title">${title}</h3>
+                        <p class="delete-message">${message}</p>
+                        <div class="delete-actions">
+                            <button class="delete-cancel-btn">Cancel</button>
+                            <button class="delete-confirm-btn">Delete</button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(overlay);
+                
+                // Add event listeners
+                overlay.querySelector('.delete-confirm-btn').addEventListener('click', executeDelete);
+                overlay.querySelector('.delete-cancel-btn').addEventListener('click', () => {
+                    document.body.removeChild(overlay);
+                    pendingDelete = null;
+                });
+                
+                // Close on overlay click
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        document.body.removeChild(overlay);
+                        pendingDelete = null;
+                    }
+                });
+            }
+            
+            // Execute delete action
+            function executeDelete() {
+                if (!pendingDelete) return;
+                
+                const { type, categoryId, itemIndex } = pendingDelete;
+                
+                if (type === 'category') {
+                    categories = categories.filter(c => c.id !== categoryId);
+                    
+                    if (selectedCategoryId === categoryId) {
+                        selectedCategoryId = null;
+                        emptyState.style.display = 'block';
+                        itemsContainer.classList.remove('active');
+                    }
+                } else {
+                    const category = categories.find(c => c.id === categoryId);
+                    if (category) {
+                        category.items.splice(itemIndex, 1);
+                    }
+                }
+                
+                loadCategories();
+                
+                // Close modal
+                const overlay = document.querySelector('.delete-confirmation-overlay');
+                if (overlay) {
+                    document.body.removeChild(overlay);
+                }
+                
+                pendingDelete = null;
+                saveToLocalStorage();
+            }
+            
+            // Add new content
+            function addItem() {
+                if (!selectedCategoryId) return;
+                
+                const content = itemInput.value.trim();
+                if (content === '') return;
+                
+                const category = categories.find(c => c.id === selectedCategoryId);
+                if (category) {
+                    category.items.push(content);
+                    itemInput.value = '';
+                    loadCategoryItems(category);
+                    saveToLocalStorage();
+                }
+            }
+            
+            // Save to LocalStorage
+            function saveToLocalStorage() {
+                localStorage.setItem('categories', JSON.stringify(categories));
+            }
+            
+            // Event listeners
+            addCategoryBtn.addEventListener('click', addCategory);
+            categoryInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addCategory();
+                }
+            });
+            
+            addItemBtn.addEventListener('click', addItem);
+            itemInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addItem();
+                }
+            });
+            
+            // Initial load
+            loadCategories();
+        });
+    </script>
+</body>
+</html>
