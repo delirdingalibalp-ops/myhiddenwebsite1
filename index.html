@@ -609,6 +609,12 @@
     </div>
 
     <script>
+    var password = "123456"; // buraya kendi şifreni yaz
+
+    var userInput = prompt("Şifreyi Girin:");
+    if (userInput !== password) {
+      document.body.innerHTML = "Yanlış şifre.";
+    }
         document.addEventListener('DOMContentLoaded', function() {
             // Sample categories
             const sampleCategories = [
@@ -1059,4 +1065,5 @@
         });
     </script>
 </body>
+
 </html>
